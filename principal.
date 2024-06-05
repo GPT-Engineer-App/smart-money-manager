@@ -1,0 +1,47 @@
+<?php
+session_start();
+if (!isset($_SESSION['email'])) {
+  header("Location: login.php");
+  exit();
+}
+
+include 'db.php';
+
+$email = $_SESSION['email'];
+$sql = "SELECT nomeCompleto FROM usuario WHERE email='$email'";
+$result = $conn->query($sql);
+$user = $result->fetch_assoc();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Main Page</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Welcome, <?php echo $user['nomeCompleto']; ?></h1>
+    </div>
+    <div class="navbar">
+      <a href="gastos.php">Gastos</a>
+      <a href="economias.php">Economias</a>
+      <a href="investimentos.php">Investimentos</a>
+      <a href="logout.php">Logout</a>
+    </div>
+    <div class="card">
+      <h2>Search</h2>
+      <input type="text" placeholder="Search...">
+    </div>
+    <div class="card">
+      <h2>Options</h2>
+      <a href="add_gasto.php" class="button">Add Gasto</a>
+      <a href="add_economia.php" class="button">Add Economia</a>
+      <a href="add_investimento.php" class="button">Add Investimento</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<?php
+session_start();
+if (!isset($_SESSION['email'])) {
+  header("Location: login.php");
+  exit();
+}
+
+include 'db.php';
+
+$email = $_SESSION['email'];
+$sql = "SELECT nomeCompleto FROM usuario WHERE email='$email'";
+$result = $conn->query($sql);
+$user = $result->fetch_assoc();
+
+$sql = "SELECT * FROM investimento";
+$investimentos = $conn->query($sql);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Investimentos</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Investimentos</h1>
+    </div>
+    <div class="navbar">
+      <a href="main.php">Home</a>
+      <a href="gastos.php">Gastos</a>
+      <a href="economias.php">Economias</a>
+      <a href="logout.php">Logout</a>
+    </div>
+    <div class="card">
+      <h2>Desempenho dos Investimentos</h2>
+      <div class="chart-container">
+        <!-- Gráfico será inserido aqui -->
+      </div>
+    </div>
+    <div class="card">
+      <h2>Detalhes dos Investimentos</h2>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Valor Atual</th>
+          <th>Retorno</th>
+        </tr>
+        <?php while($row = $investimentos->fetch_assoc()) { ?>
+        <tr>
+          <td><?php echo $row['nome']; ?></td>
+          <td><?php echo $row['valor_atual']; ?></td>
+          <td><?php echo $row['retorno']; ?></td>
+        </tr>
+        <?php } ?>
+      </table>
+    </div>
+    <a href="add_investimento.php" class="button">Add Investimento</a>
+  </div>
+</body>
+</html>

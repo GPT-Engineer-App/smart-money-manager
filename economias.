@@ -1,0 +1,64 @@
+<?php
+session_start();
+if (!isset($_SESSION['email'])) {
+  header("Location: login.php");
+  exit();
+}
+
+include 'db.php';
+
+$email = $_SESSION['email'];
+$sql = "SELECT nomeCompleto FROM usuario WHERE email='$email'";
+$result = $conn->query($sql);
+$user = $result->fetch_assoc();
+
+$sql = "SELECT * FROM transacao WHERE tipo='Crédito'";
+$transacoes = $conn->query($sql);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Economias</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Economias</h1>
+    </div>
+    <div class="navbar">
+      <a href="main.php">Home</a>
+      <a href="gastos.php">Gastos</a>
+      <a href="investimentos.php">Investimentos</a>
+      <a href="logout.php">Logout</a>
+    </div>
+    <div class="card">
+      <h2>Progresso das Economias</h2>
+      <div class="chart-container">
+        <!-- Gráfico será inserido aqui -->
+      </div>
+    </div>
+    <div class="card">
+      <h2>Detalhes das Economias</h2>
+      <table>
+        <tr>
+          <th>Descrição</th>
+          <th>Valor</th>
+          <th>Data</th>
+        </tr>
+        <?php while($row = $transacoes->fetch_assoc()) { ?>
+        <tr>
+          <td><?php echo $row['descricao']; ?></td>
+          <td><?php echo $row['valor']; ?></td>
+          <td><?php echo $row['data']; ?></td>
+        </tr>
+        <?php } ?>
+      </table>
+    </div>
+    <a href="add_economia.php" class="button">Add Economia</a>
+  </div>
+</body>
+</html>

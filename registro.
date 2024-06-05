@@ -1,0 +1,59 @@
+<?php
+include 'db.php';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $nomeCompleto = $_POST['nomeCompleto'];
+  $email = $_POST['email'];
+  $senha = $_POST['senha'];
+  $confirmSenha = $_POST['confirmSenha'];
+
+  if ($senha == $confirmSenha) {
+    $sql = "INSERT INTO usuario (nomeCompleto, email, senha) VALUES ('$nomeCompleto', '$email', '$senha')";
+    if ($conn->query($sql) === TRUE) {
+      header("Location: login.php");
+    } else {
+      $error = "Error: " . $sql . "<br>" . $conn->error;
+    }
+  } else {
+    $error = "Passwords do not match";
+  }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Register</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Register</h1>
+    </div>
+    <form method="POST" action="register.php">
+      <div class="form-group">
+        <label for="nomeCompleto">Full Name:</label>
+        <input type="text" id="nomeCompleto" name="nomeCompleto" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="senha">Password:</label>
+        <input type="password" id="senha" name="senha" required>
+      </div>
+      <div class="form-group">
+        <label for="confirmSenha">Confirm Password:</label>
+        <input type="password" id="confirmSenha" name="confirmSenha" required>
+      </div>
+      <button type="submit" class="button">Register</button>
+      <?php if (isset($error)) { echo "<p style='color:red;'>$error</p>"; } ?>
+    </form>
+    <p>Already have an account? <a href="login.php">Login here</a></p>
+  </div>
+</body>
+</html>
